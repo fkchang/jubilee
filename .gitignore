@@ -2,7 +2,6 @@ pkg/
 .idea/
 *.iml
 *.class
-lib/jubilee/jubilee.jar
 .bundle
 .ruby-version
 
