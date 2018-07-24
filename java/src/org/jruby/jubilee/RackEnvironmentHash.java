@@ -1,12 +1,12 @@
 package org.jruby.jubilee;
 
 import io.netty.handler.codec.http.HttpHeaders;
+import org.vertx.java.core.MultiMap;
 import org.jruby.*;
 import org.jruby.jubilee.utils.RubyHelper;
 import org.jruby.runtime.Block;
 import org.jruby.runtime.ThreadContext;
 import org.jruby.runtime.builtin.IRubyObject;
-import org.vertx.java.core.MultiMap;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ public class RackEnvironmentHash extends RubyHash {
     // synchronized probably isn't needed here since we create a new RackEnvironment
     // per request, but we can't guarantee users aren't spawning a new thread and
     // passing the env to that new thread
-    private synchronized void fillKey(final IRubyObject rubyKey) {
+    synchronized void fillKey(final IRubyObject rubyKey) {
         if (!filledEntireHash) {
             if (rubyKey instanceof RubyString && !containsKey(rubyKey)) {
                 if (!filledHeaderKeyMap) populateHeaderKeyMap();
@@ -231,12 +231,6 @@ public class RackEnvironmentHash extends RubyHash {
     }
 
     @Override
-    public IRubyObject to_s19(ThreadContext context) {
-        fillEntireHash();
-        return super.to_s19(context);
-    }
-
-    @Override
     public RubyHash rehash() {
         fillEntireHash();
         return super.rehash();
@@ -336,12 +330,6 @@ public class RackEnvironmentHash extends RubyHash {
     public IRubyObject key(ThreadContext context, IRubyObject expected) {
         fillEntireHash();
         return super.key(context, expected);
-    }
-
-    @Override
-    public RubyArray indices(ThreadContext context, IRubyObject[] indices) {
-        fillEntireHash();
-        return super.indices(context, indices);
     }
 
     @Override
@@ -475,7 +463,7 @@ public class RackEnvironmentHash extends RubyHash {
         fillEntireHash();
         return super.flatten(context, level);
     }
-
+/*
     @Override
     public IRubyObject getCompareByIdentity(ThreadContext context) {
         fillEntireHash();
@@ -487,7 +475,7 @@ public class RackEnvironmentHash extends RubyHash {
         fillEntireHash();
         return super.getCompareByIdentity_p(context);
     }
-
+*/
     @Override
     public IRubyObject dup(ThreadContext context) {
         fillEntireHash();
